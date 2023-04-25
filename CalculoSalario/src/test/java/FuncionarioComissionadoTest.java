@@ -1,15 +1,16 @@
 import main.Funcionario;
+import main.FuncionarioComissionado;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class FuncionarioComissionadoTest {
-    protected Funcionario renata;
+    protected FuncionarioComissionado renata;
 
     @Before
     public void inicializar() {
-        renata = new main.FuncionarioComissionado("Renata", "19276", 55, 40000);
+        renata = new FuncionarioComissionado("Renata", "19276", 55, 40000);
     }
     @Test
     public void InstanciaFuncionario_ValidaCalculoRendimento() {
