@@ -1,45 +1,69 @@
 package UnitTests;
 
-import Entities.Candidate;
+import Comparators.AgeComparator;
 import Comparators.VoteComparator;
-import org.junit.Assert;
+import Entities.Candidate;
+import Entities.Gender;
+import Entities.Party;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
+import static org.junit.Assert.assertEquals;
+import java.util.AbstractMap;
+import java.util.Comparator;
 import java.util.Map;
 
 public class VoteComparatorTest {
 
+
     private VoteComparator voteComparator;
-    private Map.Entry<Candidate, Integer> candidateOneEntry;
-    private Map.Entry<Candidate, Integer> candidateTwoEntry;
+    private Candidate candidateOne;
+    private Candidate candidateTwo;
+    private Candidate candidateThree;
 
     @Before
     public void setup() {
+        Party partyA = new Party("party A");
         voteComparator = new VoteComparator();
-        Candidate candidateOne = new Candidate("Leonardo");
-        Candidate candidateTwo = new Candidate("Breno");
-        candidateOneEntry = createEntry(candidateOne, 10);
-        candidateTwoEntry = createEntry(candidateTwo, 15);
+        candidateOne = new Candidate(1,"Leonardo", 20, Gender.MALE, partyA);
+        candidateTwo = new Candidate(2,"Breno", 21, Gender.MALE, partyA);
+        candidateThree = new Candidate(3,"Maria", 25, Gender.FEMALE, partyA);
     }
 
     @Test
-    public void Compare_FirstCandidateHasMoreVotes_ShouldReturnNegative() {
+    public void compare_CandidateOneHasHigherVoteCount_ReturnsNegative() {
+        int voteCountOne = 10;
+        int voteCountTwo = 5;
+
+        Map.Entry<Candidate, Integer> candidateOneEntry = new AbstractMap.SimpleEntry<>(candidateOne, voteCountOne);
+        Map.Entry<Candidate, Integer> candidateTwoEntry = new AbstractMap.SimpleEntry<>(candidateTwo, voteCountTwo);
+
         int result = voteComparator.compare(candidateOneEntry, candidateTwoEntry);
-        Assert.assertTrue(result < 0);
+
+        assertEquals(-1, result);
     }
 
     @Test
-    public void Compare_FirstCandidateHasLessVotes_ShouldReturnPositive() {
-        int result = voteComparator.compare(candidateTwoEntry, candidateOneEntry);
-        Assert.assertTrue(result > 0);
+    public void compare_CandidateTwoHasHigherVoteCount_ReturnsPositive() {
+        int voteCountOne = 5;
+        int voteCountTwo = 10;
+
+        Map.Entry<Candidate, Integer> candidateOneEntry = new AbstractMap.SimpleEntry<>(candidateOne, voteCountOne);
+        Map.Entry<Candidate, Integer> candidateTwoEntry = new AbstractMap.SimpleEntry<>(candidateTwo, voteCountTwo);
+
+        int result = voteComparator.compare(candidateOneEntry, candidateTwoEntry);
+
+        assertEquals(1, result);
     }
 
     @Test
-    public void Compare_CandidatesHaveSameNumberOfVotes_ShouldReturnZero() {
-        Map.Entry<Candidate, Integer> candidateThreeEntry = createEntry(new Candidate("Joao"), 25);
-        int result = voteComparator.compare(candidateTwoEntry, candidateThreeEntry);
-        Assert.assertEquals(0, result);
+    public void compare_CandidateVoteCountsAreEqual_ReturnsZero() {
+        int voteCount = 5;
+
+        Map.Entry<Candidate, Integer> candidateOneEntry = new AbstractMap.SimpleEntry<>(candidateOne, voteCount);
+        Map.Entry<Candidate, Integer> candidateTwoEntry = new AbstractMap.SimpleEntry<>(candidateTwo, voteCount);
+
+        int result = voteComparator.compare(candidateOneEntry, candidateTwoEntry);
+
+        assertEquals(0, result);
     }
 }

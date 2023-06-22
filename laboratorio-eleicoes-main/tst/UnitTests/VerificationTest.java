@@ -1,74 +1,98 @@
 package UnitTests;
 
 import Entities.*;
-import org.junit.Assert;
+import Exceptions.VoteException;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class VerificationTest {
 
-    private List<Vote> votes;
+    private Election election;
+    private Vote voteOne;
+    private Vote voteTwo;
+    private Vote voteThree;
+    private Vote voteFour;
+    private Vote voteFive;
+    private Vote voteSix;
+    private Vote voteSeven;
     private Verification verification;
+    private ArrayList<Candidate> candidates;
+    private Candidate candidateOne;
+    private Candidate candidateTwo;
 
     @Before
-    public void setup() {
-        votes = new ArrayList<>();
+    public void setup() throws VoteException {
         Party partyA = new Party("Party A");
         Party partyB = new Party("Party B");
+        candidateOne = new Candidate(1, "Leonardo", 20, Gender.MALE, partyA);
+        candidateTwo = new Candidate(2, "Breno", 21, Gender.MALE, partyB);
+        candidates = new ArrayList<>(Arrays.asList(candidateOne, candidateTwo));
+        election = new Election(candidates);
 
-        Candidate candidate1 = new Candidate(1, "Leonardo", 20, Candidate.Gender.MALE, partyA);
-        Candidate candidate2 = new Candidate(2, "Bruna", 25, Candidate.Gender.FEMALE, partyA);
+        voteOne = new Vote(candidateOne);
+        voteTwo = new Vote(candidateTwo);
+        voteThree = new Vote(candidateTwo);
+        voteFour = new Vote(candidateOne);
+        voteFive = new Vote(candidateTwo);
+        voteSix = new Vote(candidateOne);
+        voteSeven = new Vote(candidateOne);
 
-        votes.add(new Vote(candidate1, true));
-        votes.add(new Vote(candidate2, true));
-        votes.add(new Vote(candidate1, true));
-        votes.add(new Vote(candidate1, true));
+        election.addVote(voteOne);
+        election.addVote(voteTwo);
+        election.addVote(voteThree);
+        election.addVote(voteFour);
+        election.addVote(voteFive);
+        election.addVote(voteSix);
+        election.addVote(voteSeven);
 
-        Election election = new Election(votes);
         verification = new Verification(election);
     }
 
     @Test
-    public void DefineVerification_ValidVotes_ShouldSetVotesPerCandidate() {
-        Map<Candidate, Integer> votesPerCandidate = verification.getVotesPerCandidate();
+    public void defineVerification_SetsVotesPerCandidate() {
+        verification.defineVerification();
+        Collection<Candidate> candidates = verification.getVotesPerCandidate().keySet();
 
-        Assert.assertEquals(2, votesPerCandidate.size());
-        Assert.assertEquals(3, votesPerCandidate.get(new Candidate(1, "Leonardo", 20, Candidate.Gender.MALE, null)).intValue());
-        Assert.assertEquals(1, votesPerCandidate.get(new Candidate(2, "Bruna", 25, Candidate.Gender.FEMALE, null)).intValue());
+        assertEquals(2, candidates.size());
+        assertTrue(candidates.contains(candidateOne));
+        assertTrue(candidates.contains(candidateTwo));
     }
 
     @Test
-    public void DefineVerification_ValidVotes_ShouldSetMostAndLeastVoted() {
+    public void defineVerification_SetsMostAndLeastVoted() {
+        verification.defineVerification();
         Candidate mostVoted = verification.getMostVoted();
         Candidate leastVoted = verification.getLeastVoted();
 
-        Assert.assertEquals(new Candidate(1, "Leonardo", 20, Candidate.Gender.MALE, null), mostVoted);
-        Assert.assertEquals(new Candidate(2, "Bruna", 25, Candidate.Gender.FEMALE, null), leastVoted);
+        assertEquals(candidateOne, mostVoted);
+        assertEquals(candidateTwo, leastVoted);
     }
 
     @Test
-    public void DefineVerification_ValidVotes_ShouldSetOldestAndYoungest() {
+    public void defineVerification_SetsOldestAndYoungest() {
+        verification = new Verification(election);
+        verification.defineVerification();
         Candidate oldest = verification.getOldest();
         Candidate youngest = verification.getYoungest();
 
-        Assert.assertEquals(new Candidate(2, "Bruna", 25, Candidate.Gender.FEMALE, null), oldest);
-        Assert.assertEquals(new Candidate(1, "Leonardo", 20, Candidate.Gender.MALE, null), youngest);
+        assertEquals(candidateTwo, oldest);
+        assertEquals(candidateOne, youngest);
     }
 
     @Test
-    public void GetResults_ValidVotes_ShouldReturnCorrectResults() {
-        String expectedResults = "Candidato(a): Leonardo | Total de votos válidos: 3\n" +
-                "Candidato(a): Bruna | Total de votos válidos: 1\n" +
-                "\r" +
-                "Candidato(a) mais votado(a): Leonardo (Party A)\r" +
-                "Candidato(a) menos votado(a): Bruna (Party A)\r" +
-                "Candidato(a) mais jovem: Leonardo\r" +
-                "Candidato(a) mais velho(a): Bruna\r" +
-                "Total de votos: 12\r" +
-                "MÉDIAS:\r" +
-                "Candid";}}
+    public void setVotesInfos_SetsValidVotesAndInvalidVotes() {
+        verification.setVotesInfos();
+        int validVotes = verification.getValidVotes();
+        int invalidVotes = verification.getInvalidVotes();
+
+        assertEquals(7, validVotes);
+        assertEquals(0, invalidVotes);
+    }
+}

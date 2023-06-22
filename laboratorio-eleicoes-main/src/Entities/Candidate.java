@@ -27,6 +27,10 @@ public class Candidate {
         return name;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public int getAge() {
         return age;
     }

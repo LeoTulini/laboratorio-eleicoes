@@ -18,6 +18,34 @@ public class Verification {
     private final Map<Candidate, String> averageVotesPerCandidate = new HashMap<>();
     private final Collection<Vote> votes;
 
+    public int getInvalidVotes() {
+        return invalidVotes;
+    }
+
+    public int getValidVotes() {
+        return validVotes;
+    }
+
+    public Map<Candidate, Integer> getVotesPerCandidate() {
+        return votesPerCandidate;
+    }
+
+    public Candidate getMostVoted() {
+        return mostVoted;
+    }
+
+    public Candidate getLeastVoted() {
+        return leastVoted;
+    }
+
+    public Candidate getOldest() {
+        return oldest;
+    }
+
+    public Candidate getYoungest() {
+        return youngest;
+    }
+
     public Verification(Election election){
         this.votes = election.getReadonlyVotes();
         defineVerification();
@@ -60,7 +88,7 @@ public class Verification {
         youngest = candidates.get(candidates.size() - 1);
     }
 
-    private void setVotesInfos(){
+    public void setVotesInfos(){
         this.validVotes = this.votes.stream()
                 .filter(Vote::isValid)
                 .toList()
@@ -102,7 +130,7 @@ public class Verification {
         return builder.toString();
     }
 
-    private String getVotesPerCandidateInfo(){
+    public String getVotesPerCandidateInfo(){
         String result = "";
 
         for (Map.Entry<Candidate, Integer> entry: this.votesPerCandidate.entrySet()) {
@@ -113,7 +141,7 @@ public class Verification {
         return result;
     }
 
-    private String getAverageVotesPerCandidateInfo(){
+    public String getAverageVotesPerCandidateInfo(){
         String result = "";
 
         for (Map.Entry<Candidate, String> entry: this.averageVotesPerCandidate.entrySet()) {
