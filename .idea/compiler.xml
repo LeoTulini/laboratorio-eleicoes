@@ -9,5 +9,8 @@
         <module name="CalculoSalario" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="laboratorio-eleicoes" target="19" />
+    </bytecodeTargetLevel>
   </component>
 </project>

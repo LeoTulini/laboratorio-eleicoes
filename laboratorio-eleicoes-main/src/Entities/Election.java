@@ -26,7 +26,7 @@ public class Election {
 
     public void addVote(Vote vote) throws VoteException {
         if (!vote.isValid()){
-            throw new VoteException();
+            throw new VoteException("");
         }
 
         this.votes.add(vote);

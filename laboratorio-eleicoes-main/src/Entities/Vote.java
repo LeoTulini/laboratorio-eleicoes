@@ -1,11 +1,7 @@
 package Entities;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Clock;
 import java.time.Instant;
-import java.time.format.FormatStyle;
 import java.util.Date;
 
 public class Vote {
@@ -19,7 +15,7 @@ public class Vote {
 
         try {
             this.creationDate = obtainUtcNow();
-        } catch (ParseException ex){
+        } catch (ParseException ex) {
             this.valid = false;
             this.error = ex.getLocalizedMessage();
         }

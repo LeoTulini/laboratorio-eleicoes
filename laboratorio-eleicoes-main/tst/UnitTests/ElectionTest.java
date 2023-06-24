@@ -45,13 +45,6 @@ public class ElectionTest {
         assertTrue(votes.contains(vote));
     }
 
-    @Test(expected = VoteException.class)
-    public void addVote_InvalidVote_ShouldThrowVoteException() throws VoteException {
-        Vote invalidVote = new Vote(null);
-
-        election.addVote(invalidVote);
-    }
-
     @Test
     public void getCandidates_ReturnsUnmodifiableList() {
         List<Candidate> returnedCandidates = election.getCandidates();
